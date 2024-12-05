@@ -97,6 +97,7 @@ const propTypes = {
     }),
   ]),
   inputComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.elementType]),
+  hideSuggest: PropTypes.bool,
 
   children: PropTypes.oneOfType([
     PropTypes.element,
@@ -269,6 +270,7 @@ class MentionsInput extends React.Component {
   }
 
   renderSuggestionsOverlay = () => {
+    if (this.props.hideSuggest) return null;
     if (!isNumber(this.state.selectionStart)) {
       // do not show suggestions when the input does not have the focus
       return null
@@ -378,8 +380,8 @@ class MentionsInput extends React.Component {
     )
     const markupEndIndex = mapPlainTextIndex(value, config, selectionEnd, 'END')
 
-    const pastedMentions = event.clipboardData.getData('text/react-mentions')
-    const pastedData = event.clipboardData.getData('text/plain')
+    const pastedMentions = event.clipboardData.getData('text/react-mentions').slice(0, this.props.maxLength)
+    const pastedData = event.clipboardData.getData('text/plain').slice(0, this.props.maxLength)
 
     const newValue = spliceString(
       value,
